@@ -1,11 +1,11 @@
 name: dev
 on:
- # workflow_dispatch
-  push:
-    branches:
-      - dev
-    paths:
-      - "terraform/*"
+  workflow_dispatch
+  # push:
+  #   branches:
+  #     - dev
+  #   paths:
+  #     - "terraform/*"
 
 
 defaults:
