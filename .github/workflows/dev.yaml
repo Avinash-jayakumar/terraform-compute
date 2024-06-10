@@ -41,7 +41,7 @@ jobs:
         uses: hashicorp/setup-terraform@v2
 
       - name: test
-        run: ls
+        run: gcloud auth list
 
       - name: Terraform format
         id: fmt
@@ -49,7 +49,7 @@ jobs:
 
       - name: Terraform init
         id: init
-        run: terraform init
+        run: terraform init 
 
       - name: Terraform validate
         id: validate
@@ -57,7 +57,7 @@ jobs:
 
       - name: Terraform plan
         id: plan
-        run: terraform plan -var-file=./dev/terraform.tfvars -no-color -input=false
+        run: terraform plan -no-color -input=false
         continue-on-error: true
 
       - name: Terraform Plan Status
