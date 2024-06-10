@@ -17,7 +17,7 @@ permissions:
   contents: read
 jobs:
   dev:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     # These permissions are needed to interact with GitHub's OIDC Token endpoint. New
     permissions:
       id-token: write
