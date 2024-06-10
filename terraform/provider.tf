@@ -7,6 +7,6 @@ provider "google" {
 terraform {
   backend "gcs" {
     bucket = "tf-backend-wif"
-    prefix = "terraform/state"
+  #  prefix = "terraform/state"
   }
 }
