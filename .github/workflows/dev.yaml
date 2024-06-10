@@ -32,10 +32,10 @@ jobs:
         with:
           # Value from command: gcloud iam workload-identity-pools providers describe github-actions --workload-identity-pool="github-actions-pool" --location="global"
           workload_identity_provider: "projects/734785176132/locations/global/workloadIdentityPools/github-actions-pool/providers/github-actions-provider"
-          create_credentials_file: true
+          #create_credentials_file: true
           service_account: "workload-identity-federation@idyllic-slice-422610-p1.iam.gserviceaccount.com"
-          token_format: "access_token"
-          access_token_lifetime: "120s"
+         # token_format: "access_token"
+         # access_token_lifetime: "120s"
 
       - name: Setup Terraform with specified version on the runner
         uses: hashicorp/setup-terraform@v2
