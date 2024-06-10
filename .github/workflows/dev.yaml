@@ -1,4 +1,4 @@
-name: vpc-ci-dev-create
+name: dev
 on:
  # workflow_dispatch
   push:
