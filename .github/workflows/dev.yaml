@@ -1,0 +1,65 @@
+name: vpc-ci-dev-create
+on:
+ # workflow_dispatch
+  push:
+    branches:
+      - main
+    paths:
+      - "terraform/*"
+
+
+defaults:
+  run:
+    shell: bash
+    working-directory: ./terraform/
+
+permissions:
+  contents: read
+jobs:
+  dev:
+    runs-on: ubuntu-latest
+    # These permissions are needed to interact with GitHub's OIDC Token endpoint. New
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v3
+        
+      - name: Configure GCP credentials
+        id: auth
+        uses: google-github-actions/auth@v1
+        with:
+          # Value from command: gcloud iam workload-identity-pools providers describe github-actions --workload-identity-pool="github-actions-pool" --location="global"
+          workload_identity_provider: "projects/734785176132/locations/global/workloadIdentityPools/github-actions-pool/providers/github-actions-provider"
+          create_credentials_file: true
+          service_account: "workload-identity-federation@idyllic-slice-422610-p1.iam.gserviceaccount.com"
+          token_format: "access_token"
+          access_token_lifetime: "120s"
+
+      - name: Setup Terraform with specified version on the runner
+        uses: hashicorp/setup-terraform@v2
+
+      - name: Terraform format
+        id: fmt
+        run: terraform fmt -check
+
+      - name: Terraform init
+        id: init
+        run: terraform init
+
+      - name: Terraform validate
+        id: validate
+        run: terraform validate
+
+      - name: Terraform plan
+        id: plan
+        run: terraform plan -var-file=./dev/terraform.tfvars -no-color -input=false
+        continue-on-error: true
+
+      - name: Terraform Plan Status
+        if: steps.plan.outcome == 'failure'
+        run: exit 1
+
+      # - name: Terraform Apply
+      #   run: terraform apply -var-file=./dev/terraform.tfvars -auto-approve -input=false
