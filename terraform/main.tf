@@ -6,23 +6,23 @@ locals {
   json_data      = { for f in local.json_files : trimsuffix(basename(f), ".json") => { for a, b in jsondecode(file("${path.module}/${f}")) : b.server_type => b } }
   json = flatten([for k, v in local.json_data : [for a, b in v : {
     file_name        = k
-    region           = b.region
     application_type = b.application_type
-    p_n_flag         = b.p_n_flag
-    vm_name_suffix   = b.vm_name_suffix
     server_type      = b.server_type
-    boot_disk        = b.boot_disk
-    os_type          = b.os_type
-    host_project     = b.host_project
-    service_project  = b.service_project
-    network          = b.network
-    subnetwork       = b.subnetwork
-    machine_type     = b.machine_type
-    service_account  = b.service_account
-    metadata         = b.metadata
     customer_code    = b.customer_code
-    attached_disk    = b.attached_disk
-    zone             = b.zone
+    region           = try(b.region , var.vm_defaults["${b.server_type}"]["region"])
+    p_n_flag         = try(b.p_n_flag , var.vm_defaults["${b.server_type}"]["p_n_flag"])
+    vm_name_suffix   = try(b.vm_name_suffix , var.vm_defaults["${b.server_type}"]["vm_name_suffix"])
+    boot_disk        = try(b.boot_disk , var.vm_defaults["${b.server_type}"]["boot_disk"])
+    os_type          = try(b.os_type , var.vm_defaults["${b.server_type}"]["os_type"])
+    host_project     = try(b.host_project , var.vm_defaults["${b.server_type}"]["host_project"])
+    service_project  = try(b.service_project , var.vm_defaults["${b.server_type}"]["service_project"])
+    network          = try(b.network , var.vm_defaults["${b.server_type}"]["network"])
+    subnetwork       = try(b.subnetwork , var.vm_defaults["${b.server_type}"]["subnetwork"])
+    machine_type     = try(b.machine_type , var.vm_defaults["${b.server_type}"]["machine_type"])
+    service_account  = try(b.service_account , var.vm_defaults["${b.server_type}"]["service_account"])
+    metadata         = try(b.metadata , var.vm_defaults["${b.server_type}"]["metadata"])
+    attached_disk    = try(b.attached_disk , var.vm_defaults["${b.server_type}"]["attached_disk"])
+    zone             = try(b.zone , var.vm_defaults["${b.server_type}"]["zone"])
     }
     ]
   ])
@@ -51,4 +51,8 @@ module "compute" {
   zone             = each.value.zone
   region           = each.value.region
 
+}
+
+output "test" {
+  value = local.json
 }
