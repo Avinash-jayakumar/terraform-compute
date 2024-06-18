@@ -4,9 +4,9 @@ provider "google" {
   region  = "us-east4"
 }
 
-terraform {
-  backend "gcs" {
-    bucket = "tf-backend-wif"
-    prefix = "terraform/state"
-  }
-}
+# terraform {
+#   backend "gcs" {
+#     bucket = "tf-backend-wif"
+#     prefix = "terraform/state"
+#   }
+# }
